@@ -11,8 +11,6 @@ export enum TokenType {
   AdditiveOperator = 'ADDITIVE_OPERATOR',
   MultiplicativeOperator = 'MULTIPLICATIVE_OPERATOR',
   PowOperator = 'POW_OPERATOR',
-  LogFunction = 'LOG_FUNCTION',
-  SqrtFunction = 'SQRT_FUNCTION',
   Function = 'FUNCTION',
 }
 
@@ -26,8 +24,6 @@ export class Tokenizer {
     [/^[*\/]/, TokenType.MultiplicativeOperator],
     [/^\^/, TokenType.PowOperator],
     [/^(log|sqrt)/, TokenType.Function],
-    [/^log/, TokenType.LogFunction],
-    [/^sqrt/, TokenType.SqrtFunction],
   ];
 
   private expression = '';

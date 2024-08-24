@@ -10,7 +10,7 @@ import { default as unary_operators } from './unary_operators';
 import { default as complex_expressions } from './complex_expressions';
 import { default as solver } from './solver';
 
-export const test = () => {
+export const tests = () => {
   numbers(parsing_test);
   additive_operators(parsing_test);
   multiplicative_operators(parsing_test);
