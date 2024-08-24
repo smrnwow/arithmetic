@@ -18,7 +18,7 @@ import { Parser, Solver } from './index';
   terminal
     .on('line', (line) => {
       try {
-        console.log(`= ${solver.solve(parser.parse(line))}`);
+        console.log(solver.solve(parser.parse(line)));
       } catch (error) {
         console.log(`error: ${error.message}`);
       } finally {
