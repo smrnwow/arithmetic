@@ -2,7 +2,7 @@ import { Tokenizer, Token, TokenType } from './tokenizer';
 import { Ast, AstNode, ExpressionNode, FunctionNode, NumberNode } from './ast';
 
 export class Parser {
-  private tokenizer = new Tokenizer();
+  constructor(private tokenizer: Tokenizer) {}
 
   private lookahead: Token | null = null;
 

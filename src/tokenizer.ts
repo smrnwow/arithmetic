@@ -1,3 +1,5 @@
+import { Operations } from './operations';
+
 export interface Token {
   type: TokenType;
   value: string;
@@ -15,15 +17,15 @@ export enum TokenType {
 }
 
 export class Tokenizer {
+  constructor(operations: Operations) {
+    this.load(operations);
+  }
+
   private tokens: [RegExp, TokenType][] = [
     [/^\s+/, TokenType.Whitespace],
     [/^([0-9]*\.[0-9]+|[0-9]+)/, TokenType.Number],
     [/^\(/, TokenType.LeftParenthesis],
     [/^\)/, TokenType.RightParentesis],
-    [/^[+\-]/, TokenType.AdditiveOperator],
-    [/^[*\/]/, TokenType.MultiplicativeOperator],
-    [/^\^/, TokenType.PowOperator],
-    [/^(log|sqrt)/, TokenType.Function],
   ];
 
   private expression = '';
@@ -73,5 +75,45 @@ export class Tokenizer {
     this.cursor += match[0].length;
 
     return match[0];
+  }
+
+  private load(operations: Operations): void {
+    const binary = operations.list_binary();
+
+    this.add_token(
+      TokenType.AdditiveOperator,
+      binary
+        .filter((operation) => operation.precedence === 1)
+        .map((operation) => '\\' + operation.operator)
+        .join('|')
+    );
+
+    this.add_token(
+      TokenType.MultiplicativeOperator,
+      binary
+        .filter((operation) => operation.precedence === 2)
+        .map((operation) => '\\' + operation.operator)
+        .join('|')
+    );
+
+    this.add_token(
+      TokenType.PowOperator,
+      binary
+        .filter((operation) => operation.precedence === 3)
+        .map((operation) => '\\' + operation.operator)
+        .join('|')
+    );
+
+    this.add_token(
+      TokenType.Function,
+      operations
+        .list_functions()
+        .map((operation) => operation.name)
+        .join('|')
+    );
+  }
+
+  private add_token(token_type: TokenType, token: string): void {
+    this.tokens.push([new RegExp(`^(${token})`), token_type]);
   }
 }

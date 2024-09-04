@@ -1,5 +1,5 @@
 import * as readline from 'readline';
-import { Parser, Solver } from './index';
+import { Calculator } from './index';
 
 (async () => {
   const terminal = readline.createInterface({
@@ -9,16 +9,14 @@ import { Parser, Solver } from './index';
     prompt: 'type an expression> ',
   });
 
-  const parser = new Parser();
-
-  const solver = new Solver();
+  const calculator = new Calculator();
 
   terminal.prompt();
 
   terminal
-    .on('line', (line) => {
+    .on('line', (expression) => {
       try {
-        console.log(solver.solve(parser.parse(line)));
+        console.log(calculator.calculate(expression));
       } catch (error) {
         console.log(`error: ${error.message}`);
       } finally {

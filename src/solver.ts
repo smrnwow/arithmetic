@@ -1,23 +1,8 @@
 import { AstNode, ExpressionNode } from './ast';
+import { Operations } from './operations';
 
 export class Solver {
-  private binary_operations: Record<string, (left: number, right: number) => number> = {
-    '+': (left, right) => left + right,
-    '-': (left, right) => left - right,
-    '*': (left, right) => left * right,
-    '/': (left, right) => left / right,
-    '^': (left, right) => left ** right,
-  };
-
-  private unary_operations: Record<string, (argument: number) => number> = {
-    '+': (argument) => +argument,
-    '-': (argument) => -argument,
-  };
-
-  private functions: Record<string, (argument: number) => number> = {
-    log: (argument) => Math.log10(argument),
-    sqrt: (argument) => Math.sqrt(argument),
-  };
+  constructor(private operations: Operations) {}
 
   solve(expression: ExpressionNode): number {
     return this.calculate(expression.body);
@@ -33,37 +18,37 @@ export class Solver {
 
       const right = this.calculate(ast_node.right);
 
-      const handler = this.binary_operations[ast_node.operator];
+      const operation = this.operations.get_binary(ast_node.operator);
 
-      if (typeof handler === 'undefined') {
+      if (operation === null) {
         throw new TypeError(`undefined binary operation: "${ast_node.operator}"`);
       }
 
-      return handler(left, right);
+      return operation.handler(left, right);
     }
 
     if (ast_node.type === 'UnaryOperation') {
       const argument = this.calculate(ast_node.argument);
 
-      const handler = this.unary_operations[ast_node.operator];
+      const operation = this.operations.get_unary(ast_node.operator);
 
-      if (typeof handler === 'undefined') {
+      if (operation === null) {
         throw new TypeError(`undefined unary operation: "${ast_node.operator}"`);
       }
 
-      return handler(argument);
+      return operation.handler(argument);
     }
 
     if (ast_node.type === 'Function') {
       const argument = this.calculate(ast_node.argument);
 
-      const handler = this.functions[ast_node.name];
+      const operation = this.operations.get_function(ast_node.name);
 
-      if (typeof handler === 'undefined') {
+      if (operation === null) {
         throw new TypeError(`undefined function "${ast_node.name}"`);
       }
 
-      return handler(argument);
+      return operation.handler(argument);
     }
 
     return 0;

@@ -9,6 +9,7 @@ import { default as functions } from './functions';
 import { default as unary_operators } from './unary_operators';
 import { default as complex_expressions } from './complex_expressions';
 import { default as solver } from './solver';
+import { default as calculator_api } from './calculator_api';
 
 export const tests = () => {
   numbers(parsing_test);
@@ -20,6 +21,7 @@ export const tests = () => {
   unary_operators(parsing_test);
   complex_expressions(parsing_test);
   solver(solving_test);
+  calculator_api();
 
   console.log('all tests passed');
 };
